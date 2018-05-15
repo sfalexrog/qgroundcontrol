@@ -80,7 +80,7 @@ ColumnLayout {
 
         onClicked: {
             dropPanel.hide()
-            map.center = activeVehicle.coordinate
+            map.center = _activeVehicle.coordinate
         }
     }
 } // Column
