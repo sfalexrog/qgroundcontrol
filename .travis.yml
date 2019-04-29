@@ -136,9 +136,9 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
 
   # switch android config from installer to release if the android storepass isn't available
-  - if [[ "${SPEC}" = "android-g++" && "${CONFIG}" = "installer" && -z ${ANDROID_STOREPASS} ]]; then
-        export CONFIG=release;
-    fi
+#  - if [[ "${SPEC}" = "android-g++" && "${CONFIG}" = "installer" && -z ${ANDROID_STOREPASS} ]]; then
+#        export CONFIG=release;
+#    fi
 
   # insert QGC version in AndroidManifest.xml
   - if [ "${SPEC}" = "android-g++" ]; then
