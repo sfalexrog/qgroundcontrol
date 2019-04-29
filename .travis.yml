@@ -183,10 +183,11 @@ after_success:
     else
         GOOGLE_PLAY_PKG=none;
     fi
-  - if [[ "${SPEC}" = "android-g++" && "${TRAVIS_PULL_REQUEST}" = "false" && "${GOOGLE_PLAY_PKG}" != "none" ]]; then
-        echo "Trying to find apk" &&
-        (find ${SHADOW_BUILD_DIR} | grep apk);
-    fi
+  - if [[ "${SPEC}" = "android-g++" ]]; then echo "Trying to find apk" && (find ${SHADOW_BUILD_DIR} | grep apk); fi
+#  - if [[ "${SPEC}" = "android-g++" && "${TRAVIS_PULL_REQUEST}" = "false" && "${GOOGLE_PLAY_PKG}" != "none" ]]; then
+#        echo "Trying to find apk" &&
+#        (find ${SHADOW_BUILD_DIR} | grep apk);
+#    fi
 
 before_deploy:
   # create linux appimage
