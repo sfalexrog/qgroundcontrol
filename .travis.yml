@@ -7,9 +7,6 @@ env:
     - JOBS=4
     - QT_FATAL_WARNINGS=1
     - SHADOW_BUILD_DIR=/tmp/shadow_build_dir
-    # ANDROID_STOREPASS
-    # disabled for our builds -sfalexrog, 03.04.2019
-    # - secure: RGovyUnMw3fp/bHZi058JvANT1rYmNqrsuSYew0cIgirO6YbMHr/rsjwCm1FTYpBl8s1zgr+u2b8ftYnfnCz2YT+Aip4NWrVYpVU0FEmfytGILrnUS0pjlt8m7fU9AKR1ElOSll7yw7e1kftynN39Q321etvwbLZcXon6zz0suE=
 
 matrix:
     fast_finish: true
@@ -146,6 +143,12 @@ before_script:
         git fetch --tags origin master &&
         ./tools/update_android_version.sh;
     fi
+
+  # decrypt keystore for android builds
+  # Note, decryption doesn't work for me right now, so I'm using a throwaway keystore
+  #- if [[ "${SPEC}" = "android-g++" && "${CONFIG}" = "installer" ]]; then
+  #      openssl enc -d -aes-256-cbc -in ${TRAVIS_BUILD_DIR}/android/coex_keystore.jks.enc -out ${TRAVIS_BUILD_DIR}/android/coex_keystore.jks -k ${ANDROID_STOREKEY};
+  #  fi
 
 script:
   # run qmake
