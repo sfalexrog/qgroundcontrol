@@ -56,6 +56,7 @@ Rectangle {
     property bool   _isRTSP:                    _isGst && _videoSource === _videoSettings.rtspVideoSource
     property bool   _isTCP:                     _isGst && _videoSource === _videoSettings.tcpVideoSource
     property bool   _isMPEGTS:                  _isGst && _videoSource === _videoSettings.mpegtsVideoSource
+    property bool   _isUDP264RAW:               _isGst && _videoSource === _videoSettings.udp264RawVideoSource
     property bool   _videoAutoStreamConfig:     QGroundControl.videoManager.autoStreamConfigured
     property bool   _showSaveVideoSettings:     _isGst || _videoAutoStreamConfig
     property bool   _disableAllDataPersistence: QGroundControl.settingsManager.appSettings.disableAllPersistence.rawValue
@@ -242,7 +243,7 @@ Rectangle {
                                 QGCLabel {
                                     id:         udpPortLabel
                                     text:       qsTr("UDP Port")
-                                    visible:    !_videoAutoStreamConfig && (_isUDP264 || _isUDP265 || _isMPEGTS) && _videoSettings.udpPort.visible
+                                    visible:    !_videoAutoStreamConfig && (_isUDP264 || _isUDP265 || _isMPEGTS || _isUDP264RAW) && _videoSettings.udpPort.visible
                                 }
                                 FactTextField {
                                     Layout.preferredWidth:  _comboFieldWidth

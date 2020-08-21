@@ -697,6 +697,7 @@ GstVideoReceiver::_makeSource(const QString& uri)
     bool isUdp265   = uri.contains("udp265://", Qt::CaseInsensitive);
     bool isTcpMPEGTS= uri.contains("tcp://",    Qt::CaseInsensitive);
     bool isUdpMPEGTS= uri.contains("mpegts://", Qt::CaseInsensitive);
+    bool isUdpRaw   = uri.contains("udpraw://", Qt::CaseInsensitive);
 
     GstElement* source  = nullptr;
     GstElement* buffer  = nullptr;
@@ -716,7 +717,7 @@ GstVideoReceiver::_makeSource(const QString& uri)
             if ((source = gst_element_factory_make("rtspsrc", "source")) != nullptr) {
                 g_object_set(static_cast<gpointer>(source), "location", qPrintable(uri), "latency", 17, "udp-reconnect", 1, "timeout", _udpReconnect_us, NULL);
             }
-        } else if(isUdp264 || isUdp265 || isUdpMPEGTS || isTaisync) {
+        } else if(isUdp264 || isUdp265 || isUdpMPEGTS || isTaisync || isUdpRaw) {
             if ((source = gst_element_factory_make("udpsrc", "source")) != nullptr) {
                 g_object_set(static_cast<gpointer>(source), "uri", QString("udp://%1:%2").arg(qPrintable(url.host()), QString::number(url.port())).toUtf8().data(), nullptr);
 
