@@ -1036,12 +1036,12 @@ Rectangle {
 
                             QGCLabel {
                                 text:                   qsTr("Low Latency Mode")
-                                visible:                _isGst && QGroundControl.settingsManager.videoSettings.lowLatencyMode.visible
+                                visible:                _isGst && !_isUDP264RAW && QGroundControl.settingsManager.videoSettings.lowLatencyMode.visible
                             }
                             FactCheckBox {
                                 text:                   ""
                                 fact:                   QGroundControl.settingsManager.videoSettings.lowLatencyMode
-                                visible:                _isGst && QGroundControl.settingsManager.videoSettings.lowLatencyMode.visible
+                                visible:                _isGst && !_isUDP264RAW && QGroundControl.settingsManager.videoSettings.lowLatencyMode.visible
                             }
                         }
                     }

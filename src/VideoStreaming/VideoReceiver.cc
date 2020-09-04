@@ -396,6 +396,7 @@ VideoReceiver::_makeSource(const QString& uri)
                         break;
                     }
                 } else if (isUdpRaw) {
+                    // FIXME: Some platforms (Android?) require a little nudge towards the correct video format
                     if ((caps = gst_caps_from_string("video/x-h264, stream-format=(string)byte-stream")) == nullptr) {
                         qCCritical(VideoReceiverLog) << "gst_caps_from_string() failed for raw UDP stream";
                         break;
@@ -455,7 +456,8 @@ VideoReceiver::_makeSource(const QString& uri)
         gst_element_foreach_src_pad(source, _padProbe, &probeRes);
 
         if (probeRes & 1) {
-            if (probeRes & 2 && !_videoSettings->lowLatencyMode()->rawValue().toBool()) {
+            // "Raw UDP" should always be considered low-latency
+            if (probeRes & 2 && !_videoSettings->lowLatencyMode()->rawValue().toBool() && !isUdpRaw) {
                 if ((buffer = gst_element_factory_make("rtpjitterbuffer", nullptr)) == nullptr) {
                     qCCritical(VideoReceiverLog) << "gst_element_factory_make('rtpjitterbuffer') failed";
                     break;
@@ -474,7 +476,7 @@ VideoReceiver::_makeSource(const QString& uri)
                 }
             }
         } else {
-            if (_videoSettings->lowLatencyMode()->rawValue().toBool()) {
+            if (_videoSettings->lowLatencyMode()->rawValue().toBool() || isUdpRaw) {
                 g_signal_connect(source, "pad-added", G_CALLBACK(newPadCB), parser);
             } else {
                 g_signal_connect(source, "pad-added", G_CALLBACK(_linkPadWithOptionalBuffer), parser);
