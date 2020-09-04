@@ -359,6 +359,7 @@ VideoReceiver::_makeSource(const QString& uri)
     bool isUdp265   = uri.contains("udp265://", Qt::CaseInsensitive);
     bool isTcpMPEGTS= uri.contains("tcp://",    Qt::CaseInsensitive);
     bool isUdpMPEGTS= uri.contains("mpegts://", Qt::CaseInsensitive);
+    bool isUdpRaw   = uri.contains("udpraw://", Qt::CaseInsensitive);
 
     GstElement* source  = nullptr;
     GstElement* buffer  = nullptr;
@@ -378,7 +379,7 @@ VideoReceiver::_makeSource(const QString& uri)
             if ((source = gst_element_factory_make("rtspsrc", "source")) != nullptr) {
                 g_object_set(static_cast<gpointer>(source), "location", qPrintable(uri), "latency", 17, "udp-reconnect", 1, "timeout", _udpReconnect_us, NULL);
             }
-        } else if(isUdp264 || isUdp265 || isUdpMPEGTS || isTaisync) {
+        } else if(isUdp264 || isUdp265 || isUdpMPEGTS || isTaisync || isUdpRaw) {
             if ((source = gst_element_factory_make("udpsrc", "source")) != nullptr) {
                 g_object_set(static_cast<gpointer>(source), "uri", QString("udp://%1:%2").arg(qPrintable(url.host()), QString::number(url.port())).toUtf8().data(), nullptr);
 
@@ -392,6 +393,11 @@ VideoReceiver::_makeSource(const QString& uri)
                 } else if (isUdp265) {
                     if ((caps = gst_caps_from_string("application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H265")) == nullptr) {
                         qCCritical(VideoReceiverLog) << "gst_caps_from_string() failed";
+                        break;
+                    }
+                } else if (isUdpRaw) {
+                    if ((caps = gst_caps_from_string("video/x-h264, stream-format=(string)byte-stream")) == nullptr) {
+                        qCCritical(VideoReceiverLog) << "gst_caps_from_string() failed for raw UDP stream";
                         break;
                     }
                 }
